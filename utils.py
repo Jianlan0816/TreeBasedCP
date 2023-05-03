@@ -1,6 +1,9 @@
 import random
 import math
 import numpy as np
+import seaborn as sns
+import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 """
 :param t: newick tree
@@ -184,4 +187,42 @@ def New_split_nodes(nodelist):
         p = i.up
         parents.append(p)
     pa = unique(parents)
-    return pa
+    return pa, parents
+
+"""
+:param parent: numpy array of p_value in parent node
+:param child: numpy array pf p_value in children nodes
+:param name1: parent node name
+:param name2: children node name list
+:param y_testall: label of test samples (remove outliers)
+"""
+def plot_scatter(parent, child, name1, name2, y_testall):
+    for i in range(child.shape[1]):
+        plt.scatter(parent[y_testall == "outlier"], child[:,i][y_testall == "outlier"])
+        plt.xlabel(name1)
+        plt.ylabel(name2[i])
+        plt.savefig(name1+name2[i]+'_outlier_scatter.png')
+        plt.clf()
+    for i in range(child.shape[1]):
+        plt.scatter(parent[y_testall != "outlier"], child[:,i][y_testall != "outlier"])
+        plt.xlabel(name1)
+        plt.ylabel(name2[i])
+        plt.savefig(name1+name2[i]+'_inlier_scatter.png')
+        plt.clf()
+"""
+:param parent: numpy array of p_value in parent node
+:param child: numpy array pf p_value in children nodes
+:param name1: parent node name
+:param name2: children node name list
+"""
+def plot_density(parent, child, name1, name2):
+    sns.distplot(parent, hist=False, kde=True,
+                 kde_kws={'shade': True, 'linewidth': 3},
+                 label=name1)
+    for i in range(child.shape[1]):
+        sns.distplot(child[:,i], hist=False, kde=True,
+                     kde_kws = {'shade': True, 'linewidth': 3},
+                     label=name2[i])
+    plt.legend()
+    plt.savefig(name1+'_density.png')
+    plt.clf()

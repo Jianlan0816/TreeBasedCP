@@ -12,24 +12,63 @@ def calculate_coverage(conf_pred, y_test):
     true_outlier = 0
     size = list()
     for i in range(len(conf_pred)):
-        if y_test[i] == 'outlier' and conf_pred[i] == ["outlier"]:
+        if (y_test[i] == 'outlier' and conf_pred[i] == ['outlier']):
             tp = tp + 1
-        if y_test[i] != 'outlier' and (y_test[i] in conf_pred[i]):
+            #print("tree index", i, y_test[i], conf_pred[i])
+        if (y_test[i] != 'outlier' and (y_test[i] in conf_pred[i])):
             tc = tc + 1
             size.append(len(conf_pred[i]))
-        if y_test[i] != 'outlier' and (y_test[i] not in conf_pred[i]) and conf_pred[i] != ["outlier"]:
+        if (y_test[i] != 'outlier' and (y_test[i] not in conf_pred[i]) and conf_pred[i] != ['outlier']):
             fc = fc + 1
-        if y_test[i] != 'outlier' and conf_pred[i] == ["outlier"]:
+        if (y_test[i] != 'outlier' and conf_pred[i] == ['outlier']):
             fp = fp + 1
-        if conf_pred[i] != ["outlier"]:
+        if conf_pred[i] != ['outlier']:
             pred_inlier = pred_inlier + 1
         if y_test[i] == 'outlier':
             true_outlier = true_outlier + 1
+            #print("tree", y_test[i])
     if true_outlier == 0:
         print("true_outlier is zero")
     if pred_inlier == 0:
         print("pred_inlier is zero")
-    if (fp + tp) == 0:
+    if (fp + tp == 0):
         print("fp+tp is zero")
+    print("before fp and tp and true outlier", fp, tp, true_outlier)
+    # power, fdr, fcr, avg_size
+    return tp/true_outlier, fp/(fp+tp), fc/pred_inlier, sum(size)/len(size)
+
+def calculate_coverage2(conf_pred, y_test):
+    tp = 0
+    fp = 0
+    fc = 0
+    tc = 0
+    pred_inlier = 0
+    true_outlier = 0
+    size = list()
+    for i in range(len(conf_pred)):
+        if (y_test[i] == 'outlier' and conf_pred[i] == ['outlier']):
+            tp = tp + 1
+            #print("compare index", i, y_test[i], conf_pred[i])
+        if (y_test[i] != 'outlier' and (y_test[i] in conf_pred[i])):
+            tc = tc + 1
+            size.append(len(conf_pred[i]))
+        if (y_test[i] != 'outlier' and (y_test[i] not in conf_pred[i]) and conf_pred[i] != ['outlier']):
+            fc = fc + 1
+        if (y_test[i] != 'outlier' and conf_pred[i] == ['outlier']):
+            fp = fp + 1
+            #print("compare fdr index", i)
+            #print("label", y_test[i], conf_pred[i])
+        if conf_pred[i] != ['outlier']:
+            pred_inlier = pred_inlier + 1
+        if y_test[i] == 'outlier':
+            true_outlier = true_outlier + 1
+            #print("compare", y_test[i])
+    if true_outlier == 0:
+        print("true_outlier is zero")
+    if pred_inlier == 0:
+        print("pred_inlier is zero")
+    if (fp + tp == 0):
+        print("fp+tp is zero")
+    print("compare fp and tp and true outlier", fp, tp, true_outlier)
     # power, fdr, fcr, avg_size
     return tp/true_outlier, fp/(fp+tp), fc/pred_inlier, sum(size)/len(size)

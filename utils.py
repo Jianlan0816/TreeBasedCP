@@ -40,7 +40,7 @@ def ICAD_transform(data_x, data_y, node):
     # get name of each corresponding descendants with itself
     for descen in des:
         name.append(descen.name)
-    # get train data from x_train
+    # get train data from x_train)
     index = [i for i, e in enumerate(data_y) if e in name]
     trainx = data_x[index]
     trainy = [1] * trainx.shape[0]
@@ -76,7 +76,7 @@ def NEW_transform(data_x, data_y, node):
 :param inlier: list of inlier labels
 :param outlier: list of outlier labels
 :param a: test size in inlier, default is 0.5
-:param ratio: ratio of inlier test and outlier test samples, default is 1.0
+:param ratio: ratio of inlier test and outlier test samples, outlier:inlier = default is 1.0
 :param b: calibration size in proper training set, default is 0.3
 :return: data split into three, a proper training, a calibration, and a test data
 """
@@ -88,7 +88,7 @@ def ICAD_split(data_x, data_y, inlier, outlier, a=0.5, ratio = 1.0, b = 0.3):
     #x_inlier = x_inlier[num_list]
     #y_labels = y_labels[num_list]
     x_train, x_test, y_train, y_test = train_test_split(x_inlier, y_labels,
-                                                        test_size= a, random_state=52)
+                                                        test_size= a)
     c = math.floor(len(y_test)*ratio)
     index2 = [i for i,e in enumerate(data_y) if e in outlier]
     x_outlier = data_x[index2]
@@ -101,7 +101,7 @@ def ICAD_split(data_x, data_y, inlier, outlier, a=0.5, ratio = 1.0, b = 0.3):
     y_testall = np.concatenate([y_test, y_outlier], axis=0)
 
     x_trainset, x_calibration, y_trainset, y_calibration = train_test_split(x_train, y_train,
-                                                                            test_size=b, random_state=52)
+                                                                            test_size=b)
     return x_trainset, x_calibration, y_trainset, y_calibration, x_testall, y_testall
 
 """
@@ -118,7 +118,7 @@ def BCOPS_split(data_x, data_y, inlier, outlier, a = 0.5, ratio = 1.0):
     x_inlier = data_x[index1]
     y_labels = data_y[index1]
     x_train, x_test, y_train, y_test = train_test_split(x_inlier, y_labels,
-                                                        test_size=a, random_state=52)
+                                                        test_size=a)
     c = math.floor(len(y_test) * ratio)
     index2 = [i for i, e in enumerate(data_y) if e in outlier]
     x_outlier = data_x[index2]
@@ -131,9 +131,9 @@ def BCOPS_split(data_x, data_y, inlier, outlier, a = 0.5, ratio = 1.0):
     y_testall = np.concatenate([y_test, y_outlier], axis=0)
 
     x_test1, x_test2, y_test1, y_test2 = train_test_split(x_testall, y_testall,
-                                                          test_size = 0.5, random_state=52)
+                                                          test_size = 0.5)
     x_train1, x_train2, y_train1, y_train2 = train_test_split(x_train, y_train,
-                                                              test_size = 0.5, random_state = 52)
+                                                              test_size = 0.5)
     return x_train1, x_train2, y_train1, y_train2, x_test1, x_test2, y_test1, y_test2
 """
 :param data_x: a training data set
@@ -150,7 +150,7 @@ def NEW_split(data_x, data_y, inlier, outlier, a = 0.5, ratio = 1.0, b = 0.3):
     x_inlier = data_x[index1]
     y_labels = data_y[index1]
     x_train, x_test, y_train, y_test = train_test_split(x_inlier, y_labels,
-                                                        test_size = a, random_state=52)
+                                                        test_size = a)
     c = math.floor(len(y_test) * ratio)
     index2 = [i for i, e in enumerate(data_y) if e in outlier]
     x_outlier = data_x[index2]
@@ -162,11 +162,11 @@ def NEW_split(data_x, data_y, inlier, outlier, a = 0.5, ratio = 1.0, b = 0.3):
     x_testall = np.concatenate([x_test, x_outlier], axis=0)
     y_testall = np.concatenate([y_test, y_outlier], axis=0)
 
-    x_trainset, x_calibration, y_trainset, y_calibration = train_test_split(x_train, y_train,
-                                                                            test_size=b, random_state=52)
-    x_test1, x_test2, y_test1, y_test2 = train_test_split(x_testall, y_testall,
-                                                          test_size = 0.5, random_state=52)
-    return x_trainset, x_calibration, y_trainset, y_calibration, x_test1, x_test2, y_test1, y_test2
+    x_trainsetnew, x_calibrationnew, y_trainsetnew, y_calibrationnew = train_test_split(x_train, y_train,
+                                                                            test_size=b)
+    x_test1new, x_test2new, y_test1new, y_test2new = train_test_split(x_testall, y_testall,
+                                                          test_size = 0.5)
+    return x_trainsetnew, x_calibrationnew, y_trainsetnew, y_calibrationnew, x_test1new, x_test2new, y_test1new, y_test2new
 """
 :param list: list of elements
 :return list of unique elements
